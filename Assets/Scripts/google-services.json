@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "792157910167",
+    "firebase_url": "https://tasker-234415.firebaseio.com",
+    "project_id": "tasker-234415",
+    "storage_bucket": "tasker-234415.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792157910167:android:eea7565cf66c8b14",
+        "android_client_info": {
+          "package_name": "com.calmgames.tasker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792157910167-n5ri62m80e99ldpcnv0p6i4tfsn0avjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOZtfMLfNlZ4tytfD6rKAFWMZokqJxauk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
