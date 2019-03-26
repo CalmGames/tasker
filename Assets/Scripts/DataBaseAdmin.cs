@@ -69,7 +69,7 @@ public class DataBaseAdmin : MonoBehaviour
 
     public void SubmitButton ()
     {
-        if(userField.text  != "" && passField.text != "")StartCoroutine(Submit());
+        if(userField.text  != "")StartCoroutine(Submit());
     }
 
     public void LogoutButton()
@@ -140,6 +140,7 @@ public class DataBaseAdmin : MonoBehaviour
 
             yield return new WaitForSeconds(1.2f);
             //Empty Texts
+            userField.Select();
             notification.SetActive(false);
             controlsButtons[3].interactable = false;
             userText.text = "Usuario";
@@ -160,7 +161,7 @@ public class DataBaseAdmin : MonoBehaviour
     //Use To Send task
     public void ValidateTaskCharacters(InputField text)
     {
-        if (text.text.Contains(":") || text.text.Contains("/"))
+        if (text.text.Contains(":") || text.text.Contains("%"))
         {
             print("este caracter no es valido");
 
@@ -213,15 +214,10 @@ public class DataBaseAdmin : MonoBehaviour
 
             string[] nTasks = www.text.Split('/');
 
-            string[] content = nTasks[1].Split(':');
+            string[] lines = nTasks[1].Split('%');
 
-            foreach (string item in content)
-            {
-                print(item);
-            }
-
-            if (content[0] == "0") print("no hay tareas disponibles");
-            if (content[0] != "0") print("tareas disponibles: " + nTasks[0]);
+            //if (content[0] == "0") print("no hay tareas disponibles");
+            //if (content[0] != "0") print("tareas disponibles: " + nTasks[0]);
         }
     }
 
