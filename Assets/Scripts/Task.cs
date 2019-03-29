@@ -22,14 +22,9 @@ public class Task
     [SerializeField]
     public int importance;
 
-    void Start()
+    public void SetData ()
     {
-        if (title != "") SetData();
-    }
-
-    void SetData ()
-    {
-
+        //Code...
     }
 
 }

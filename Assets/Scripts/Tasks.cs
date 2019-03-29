@@ -34,21 +34,25 @@ public class Tasks : MonoBehaviour
                     content[1] = " <b><color=red>0</color></b> ";
                     break;
             }
-
-            id = int.Parse(content[0]);
-            title = content[2];
-            importance = int.Parse(content[1]);
-            task = content[3];
-
+            //Send Data
+            CreateTasks(content);
         }
     }
 
-    public void CreateTasks ()
+    public void CreateTasks (string[] data)
     {
         for (int i = 0; i < nTasks; i++)
         {
             GameObject obj = Instantiate(taskItem, Vector3.zero, Quaternion.identity) as GameObject;
             obj.transform.SetParent(list.transform);
+            Task objData = obj.GetComponent<Task>();
+            objData = new Task();
+
+            objData.id = int.Parse(data[0]);
+            objData.title = data[2];
+            objData.importance = int.Parse(data[1]);
+            objData.task = data[3];
+            objData.SetData();
         }
     }
 
