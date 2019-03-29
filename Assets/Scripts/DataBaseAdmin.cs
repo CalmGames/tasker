@@ -35,10 +35,15 @@ public class DataBaseAdmin : MonoBehaviour
     public GameObject notification;
     public Button[] controlsButtons;      //0: Settings, 1: Task, 2: SendTask, 3:  Users, 4: Logout;
 
+    [Header("Tasks")]
+    private Tasks tasks;
+
     //BUILT-IN FUNCTIONS
 
     private void Awake()
     {
+        //REFERENCES
+        tasks = GetComponent<Tasks>();
         //SINGLETON
         if (DataBaseAdmin.instance == null)
         {
@@ -218,32 +223,9 @@ public class DataBaseAdmin : MonoBehaviour
             WWW www = new WWW("http://" + server + "/tasker/getTask.php", form);
             yield return www;
 
-            string[] nTasks = www.text.Split('/');
+            tasks.ImportData(www.text);
+            
 
-            string[] lines = nTasks[1].Split('%');
-
-            for (int i = 0; i < lines.Length - 1; i++)
-            {
-                string[] content = lines[i].Split(':');
-
-                switch (content[1])
-                {
-                    case "0":
-                        content[1] = "<color=green>o</color>";
-                        break;
-                    case "1":
-                        content[1] = "<color=yellow>o</color>";
-                        break;
-                    case "2":
-                        content[1] = "<color=red>o</color>";
-                        break;
-                }
-
-                print(content[2] + ": " + content[1] + " Task: " + content[3] + "\n");
-            }
-
-            //if (content[0] == "0") print("no hay tareas disponibles");
-            //if (content[0] != "0") print("tareas disponibles: " + nTasks[0]);
         }
     }
 
