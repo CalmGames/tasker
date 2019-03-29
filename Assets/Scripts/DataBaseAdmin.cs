@@ -223,8 +223,7 @@ public class DataBaseAdmin : MonoBehaviour
             WWW www = new WWW("http://" + server + "/tasker/getTask.php", form);
             yield return www;
 
-            tasks.ImportData(www.text);
-            
+            tasks.ImportData(www.text);   
 
         }
     }

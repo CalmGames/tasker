@@ -5,7 +5,10 @@ using UnityEngine;
 public class Tasks : MonoBehaviour
 {
 
+    public Color[] importanceColors;
+
     [SerializeField]
+    [HideInInspector]
     public int nTasks;
 
     [Header("Objects")]
@@ -52,7 +55,7 @@ public class Tasks : MonoBehaviour
             objData.title = data[2];
             objData.importance = int.Parse(data[1]);
             objData.task = data[3];
-            objData.SetData();
+            objData.SetData(importanceColors);
         }
     }
 
