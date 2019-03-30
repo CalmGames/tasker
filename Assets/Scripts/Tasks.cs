@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class Tasks : MonoBehaviour
@@ -7,36 +6,34 @@ public class Tasks : MonoBehaviour
 
     public Color[] importanceColors;
 
-    [SerializeField]
-    [HideInInspector]
-    public int nTasks;
-
     [Header("Objects")]
     public GameObject list;
     public GameObject taskItem;
 
     public void ImportData(string data)
     {
-        string[] nTasks = data.Split('/');
+        string[] nTasksData = data.Split('/');
 
-        string[] lines = nTasks[1].Split('%');
+        string[] lines = nTasksData[1].Split('%');
 
+        //Sort tasks
+        string[] sorted = new string[5];
+        string[] sort = new string[int.Parse(nTasksData[0])];
+        /*
+        for (int i = 0; i < lines.Length - 1; i++)
+        {
+            sorted = lines[i].Split(':');
+            sort[i] = sorted[1];
+        }
+        Array.Sort(sort);
+        for (int i = 0; i < sort.Length; i++)
+        {
+            lines[i] = 
+        }
+        */
         for (int i = 0; i < lines.Length - 1; i++)
         {
             string[] content = lines[i].Split(':');
-
-            switch (content[1])
-            {
-                case "0":
-                    content[1] = " <b><color=green>0</color></b> ";
-                    break;
-                case "1":
-                    content[1] = " <b><color=yellow>0</color></b> ";
-                    break;
-                case "2":
-                    content[1] = " <b><color=red>0</color></b> ";
-                    break;
-            }
             //Send Data
             CreateTasks(content);
         }
@@ -44,19 +41,44 @@ public class Tasks : MonoBehaviour
 
     public void CreateTasks (string[] data)
     {
-        for (int i = 0; i < nTasks; i++)
-        {
             GameObject obj = Instantiate(taskItem, Vector3.zero, Quaternion.identity) as GameObject;
             obj.transform.SetParent(list.transform);
             Task objData = obj.GetComponent<Task>();
-            objData = new Task();
 
             objData.id = int.Parse(data[0]);
             objData.title = data[2];
             objData.importance = int.Parse(data[1]);
-            objData.task = data[3];
+            objData.task = data[3].ToString();
             objData.SetData(importanceColors);
+    }
+
+    public static Array SortString (string[] array)
+    {
+        if(array == null || array.Length == 0)
+        {
+            Debug.LogError("Sort String: Array passed i null");
+            return null;
         }
+        else
+        {
+            Array.Sort(array);
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = string.Join("", array);
+            }
+            return array;
+        }
+    }
+
+    public static void RemoveAt<T>(ref T[] arr, int index)
+    {
+        for (int a = index; a < arr.Length - 1; a++)
+        {
+            // moving elements downwards, to fill the gap at [index]
+            arr[a] = arr[a + 1];
+        }
+        // finally, let's decrement Array's size by one
+        Array.Resize(ref arr, arr.Length - 1);
     }
 
 }
