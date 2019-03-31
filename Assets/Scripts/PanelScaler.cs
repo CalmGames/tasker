@@ -9,7 +9,8 @@ public class PanelScaler : MonoBehaviour
     public string menu;
 
     public bool slide;
-    float speed = 0.1f;
+    [HideInInspector]
+    public float speed = 0.1f;
 
     //BUILT-IN FUNCTIONS
 

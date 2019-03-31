@@ -9,7 +9,8 @@ public class ControlMenuScaler : MonoBehaviour
     public string menu;
 
     public bool slide;
-    float speed = 0.1f;
+    [HideInInspector]
+    public float speed = 0.1f;
 
     //BUILT-IN FUNCTIONS
 
@@ -35,12 +36,37 @@ public class ControlMenuScaler : MonoBehaviour
                 rect.offsetMin = new Vector2(0, 0);
                 rect.offsetMax = new Vector2(0, 0);
                 break;
+            case "mainToTasks" when slide:
+                rect.offsetMin = Vector2.Lerp(rect.offsetMin, new Vector2(0, res.y), speed);
+                rect.offsetMax = Vector2.Lerp(rect.offsetMax, new Vector2(0, -res.x), speed);
+                break;
+            case "MainToTasks" when !slide:
+                rect.offsetMin = new Vector2(0, res.y);
+                rect.offsetMax = new Vector2(0, -res.x);
+                break;
+            case "mainToTasksBack" when slide:
+                rect.offsetMin = Vector2.Lerp(rect.offsetMin, new Vector2(0, 0), speed);
+                rect.offsetMax = Vector2.Lerp(rect.offsetMax, new Vector2(0, 0), speed);
+                break;
 
             //Tasks Panel
             case "Tasks" when !slide:
                 rect.offsetMin = new Vector2(res.x, 0);
                 rect.offsetMax = new Vector2(-res.y, 0);
                 break;
+            case "tasksToMain" when slide:
+                rect.offsetMin = Vector2.Lerp(rect.offsetMin, new Vector2(0, 0), speed);
+                rect.offsetMax = Vector2.Lerp(rect.offsetMax, new Vector2(0, 0), speed);
+                break;
+            case "TasksToMain" when !slide:
+                rect.offsetMin = new Vector2(0, 0);
+                rect.offsetMax = new Vector2(0, 0);
+                break;
+            case "tasksToMainBack" when slide:
+                rect.offsetMin = Vector2.Lerp(rect.offsetMin, new Vector2(res.x, 0), speed);
+                rect.offsetMax = Vector2.Lerp(rect.offsetMax, new Vector2(-res.y, 0), speed);
+                break;
+
         }
     }
 

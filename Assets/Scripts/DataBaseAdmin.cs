@@ -34,6 +34,7 @@ public class DataBaseAdmin : MonoBehaviour
     public Text permisionsText;
     public GameObject notification;
     public Button[] controlsButtons;      //0: Settings, 1: Task, 2: SendTask, 3:  Users, 4: Logout;
+    public ControlMenuScaler[] controlsPanels; //0: Main, 1: Tasks, 2: SendTask, 3: Users;
 
     [Header("Tasks")]
     private Tasks tasks;
@@ -120,6 +121,7 @@ public class DataBaseAdmin : MonoBehaviour
                 break;
             case "3: User does exist":
                 //Show info text to user
+                userField.Select();
                 userField.text = string.Empty;
                 passField.text = string.Empty;
                 infoText.color = colors[1];
@@ -164,7 +166,7 @@ public class DataBaseAdmin : MonoBehaviour
 
     //CONTROLS MENU FUNCTIONS
 
-    //Use To Send task
+    /*Use To Send task
     public void ValidateTaskCharacters(InputField text)
     {
         if (text.text.Contains(":"))
@@ -180,6 +182,7 @@ public class DataBaseAdmin : MonoBehaviour
             text.text = i;
         }
     }
+    */
 
     public void SettingButton(bool open)
     {
@@ -187,9 +190,10 @@ public class DataBaseAdmin : MonoBehaviour
         else StartCoroutine(CloseSettingsMenu());
     }
 
-    public void TasksButton()
+    public void TasksButton (bool open)
     {
-        StartCoroutine(GetTasks(false, userText.text));
+        if (open) StartCoroutine(GetTasks(false, userText.text));
+        else StartCoroutine(CloseTasksMenu());
     }
 
     public void GetNotifications(string user)
@@ -223,8 +227,9 @@ public class DataBaseAdmin : MonoBehaviour
             WWW www = new WWW("http://" + server + "/tasker/getTask.php", form);
             yield return www;
 
-            tasks.ImportData(www.text);   
+            tasks.ImportData(www.text);
 
+            StartCoroutine(OpenTasksMenu());
         }
     }
 
@@ -315,4 +320,57 @@ public class DataBaseAdmin : MonoBehaviour
             animating = false;
         }
     }
+
+    IEnumerator OpenTasksMenu()
+    {
+        if (!animating)
+        {
+            animating = true;
+
+            controlsPanels[0].menu = "mainToTasks";
+            controlsPanels[0].slide = true;
+            controlsPanels[0].speed = 0.13f;
+
+            controlsPanels[1].menu = "tasksToMain";
+            controlsPanels[1].slide = true;
+            controlsPanels[1].speed = 0.07f;
+
+            yield return new WaitForSeconds(1.4f);
+
+            controlsPanels[0].menu = "MainToTasks";
+            controlsPanels[0].slide = false;
+
+            controlsPanels[1].menu = "TasksToMain";
+            controlsPanels[1].slide = false;
+
+            animating = false;
+        }
+    }
+
+    IEnumerator CloseTasksMenu()
+    {
+        if (!animating)
+        {
+            animating = true;
+
+            controlsPanels[0].menu = "mainToTasksBack";
+            controlsPanels[0].slide = true;
+            controlsPanels[0].speed = 0.07f;
+
+            controlsPanels[1].menu = "tasksToMainBack";
+            controlsPanels[1].slide = true;
+            controlsPanels[1].speed = 0.13f;
+
+            yield return new WaitForSeconds(1.4f);
+
+            controlsPanels[0].menu = "Main";
+            controlsPanels[0].slide = false;
+
+            controlsPanels[1].menu = "Tasks";
+            controlsPanels[1].slide = false;
+
+            animating = false;
+        }
+    }
+
 }
