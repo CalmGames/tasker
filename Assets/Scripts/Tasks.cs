@@ -6,7 +6,11 @@ public class Tasks : MonoBehaviour
 
     public Color[] importanceColors;
 
+    [HideInInspector]
+    public int nTasks;
+
     [Header("Objects")]
+    public GameObject[] spawnedList;
     public GameObject list;
     public GameObject taskItem;
 
@@ -14,23 +18,10 @@ public class Tasks : MonoBehaviour
     {
         string[] nTasksData = data.Split('/');
 
+        nTasks = int.Parse(nTasksData[0]);
+
         string[] lines = nTasksData[1].Split('%');
 
-        //Sort tasks
-        string[] sorted = new string[5];
-        string[] sort = new string[int.Parse(nTasksData[0])];
-        /*
-        for (int i = 0; i < lines.Length - 1; i++)
-        {
-            sorted = lines[i].Split(':');
-            sort[i] = sorted[1];
-        }
-        Array.Sort(sort);
-        for (int i = 0; i < sort.Length; i++)
-        {
-            lines[i] = 
-        }
-        */
         for (int i = 0; i < lines.Length - 1; i++)
         {
             string[] content = lines[i].Split(':');
@@ -45,6 +36,9 @@ public class Tasks : MonoBehaviour
             obj.transform.SetParent(list.transform);
             Task objData = obj.GetComponent<Task>();
 
+            Array.Resize(ref spawnedList, spawnedList.Length + 1);
+            spawnedList[spawnedList.Length -1] = obj;
+
             objData.id = int.Parse(data[0]);
             objData.title = data[2];
             objData.importance = int.Parse(data[1]);
@@ -52,33 +46,12 @@ public class Tasks : MonoBehaviour
             objData.SetData(importanceColors);
     }
 
-    public static Array SortString (string[] array)
+    public void DeleteTasks()
     {
-        if(array == null || array.Length == 0)
+        for (int i = 0; i < spawnedList.Length; i++)
         {
-            Debug.LogError("Sort String: Array passed i null");
-            return null;
+            Destroy(spawnedList[i]);
         }
-        else
-        {
-            Array.Sort(array);
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = string.Join("", array);
-            }
-            return array;
-        }
+        Array.Resize(ref spawnedList, 0);
     }
-
-    public static void RemoveAt<T>(ref T[] arr, int index)
-    {
-        for (int a = index; a < arr.Length - 1; a++)
-        {
-            // moving elements downwards, to fill the gap at [index]
-            arr[a] = arr[a + 1];
-        }
-        // finally, let's decrement Array's size by one
-        Array.Resize(ref arr, arr.Length - 1);
-    }
-
 }

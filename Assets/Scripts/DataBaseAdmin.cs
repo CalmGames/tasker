@@ -214,8 +214,17 @@ public class DataBaseAdmin : MonoBehaviour
 
             if (www.text != "0" && !www.text.Contains(":"))
             {
+                controlsButtons[1].GetComponent<RectTransform>().sizeDelta = new Vector2(430, 240);
+                controlsButtons[1].GetComponentInChildren<Text>().text = "Tareas";
+                controlsButtons[1].interactable = true;
                 notification.SetActive(true);
                 notification.GetComponentInChildren<Text>().text = www.text;
+            }
+            else
+            {
+                controlsButtons[1].GetComponent<RectTransform>().sizeDelta = new Vector2(830, 240);
+                controlsButtons[1].GetComponentInChildren<Text>().text = "No Hay Tareas";
+                controlsButtons[1].interactable = false;
             }
         }
         else
@@ -362,6 +371,9 @@ public class DataBaseAdmin : MonoBehaviour
             controlsPanels[1].speed = 0.13f;
 
             yield return new WaitForSeconds(1.4f);
+
+            //Delete old tasks
+            GetComponent<Tasks>().DeleteTasks();
 
             controlsPanels[0].menu = "Main";
             controlsPanels[0].slide = false;
