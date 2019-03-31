@@ -126,7 +126,7 @@ public class DataBaseAdmin : MonoBehaviour
                 infoText.text = "El usuario o contraseña es incorrecto, por favor intentelo de nuevo";
                 break;
             default:
-                print("<color=red>error to login <b>" + www.text);
+                print("error to login " + www.text);
                 break;
         }
     }
