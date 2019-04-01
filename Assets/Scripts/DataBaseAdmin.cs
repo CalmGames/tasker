@@ -90,47 +90,48 @@ public class DataBaseAdmin : MonoBehaviour
         form.AddField("user", userField.text);
         form.AddField("pass", passField.text);
 
-        #pragma warning disable CS0618
-        WWW www = new WWW("http://"+ server +"/tasker/login.php", form);
-        yield return www;
-
-        //Check if user is correct
-        switch (www.text)
+        using(UnityWebRequest www = UnityWebRequest.Post("http://" + server + "/tasker/login.php", form))
         {
-            case "0: admin":
-                GetNotifications(userField.text);
-                //Set info text to null
-                infoText.text = string.Empty;
-                //Set Controls Text
-                userText.text = userField.text;
-                permisionsText.text = "Permisos: Administrador";
-                controlsButtons[3].interactable = true;
-                //Set transition to control menu
-                StartCoroutine(LoginControlsMenu());
-                break;
-            case "0: user":
-                GetNotifications(userField.text);
-                //Set info text to null
-                infoText.text = string.Empty;
-                //Set Controls Text
-                userText.text = userField.text;
-                permisionsText.text = "Permisos: Usuario";
-                controlsButtons[3].interactable = false;
-                //Set transition to control menu
-                StartCoroutine(LoginControlsMenu());
-                break;
-            case "3: User does exist":
-                //Show info text to user
-                userField.Select();
-                userField.text = string.Empty;
-                passField.text = string.Empty;
-                infoText.color = colors[1];
-                infoText.text = "El usuario o contraseña es incorrecto, por favor intentelo de nuevo";
-                break;
-            default:
-                print("error to login " + www.text);
-                break;
-        }
+            yield return www.SendWebRequest();
+
+            //Check if user is correct
+            switch (www.downloadHandler.text)
+            {
+                case "0: admin":
+                    GetNotifications(userField.text);
+                    //Set info text to null
+                    infoText.text = string.Empty;
+                    //Set Controls Text
+                    userText.text = userField.text;
+                    permisionsText.text = "Permisos: Administrador";
+                    controlsButtons[3].interactable = true;
+                    //Set transition to control menu
+                    StartCoroutine(LoginControlsMenu());
+                    break;
+                case "0: user":
+                    GetNotifications(userField.text);
+                    //Set info text to null
+                    infoText.text = string.Empty;
+                    //Set Controls Text
+                    userText.text = userField.text;
+                    permisionsText.text = "Permisos: Usuario";
+                    controlsButtons[3].interactable = false;
+                    //Set transition to control menu
+                    StartCoroutine(LoginControlsMenu());
+                    break;
+                case "3: User does exist":
+                    //Show info text to user
+                    userField.Select();
+                    userField.text = string.Empty;
+                    passField.text = string.Empty;
+                    infoText.color = colors[1];
+                    infoText.text = "El usuario o contraseña es incorrecto, por favor intentelo de nuevo";
+                    break;
+                default:
+                    print("error to login " + www.downloadHandler.text);
+                    break;
+            }
+        }     
     }
 
     IEnumerator Logout()
@@ -208,23 +209,24 @@ public class DataBaseAdmin : MonoBehaviour
             WWWForm form = new WWWForm();
             form.AddField("user", user);
 
-            #pragma warning disable CS0618
-            WWW www = new WWW("http://" + server + "/tasker/getTaskNotifications.php", form);
-            yield return www;
+            using (UnityWebRequest www = UnityWebRequest.Post("http://" + server + "/tasker/getTaskNotifications.php", form))
+            {
+                yield return www.SendWebRequest();
 
-            if (www.text != "0" && !www.text.Contains(":"))
-            {
-                controlsButtons[1].GetComponent<RectTransform>().sizeDelta = new Vector2(430, 240);
-                controlsButtons[1].GetComponentInChildren<Text>().text = "Tareas";
-                controlsButtons[1].interactable = true;
-                notification.SetActive(true);
-                notification.GetComponentInChildren<Text>().text = www.text;
-            }
-            else
-            {
-                controlsButtons[1].GetComponent<RectTransform>().sizeDelta = new Vector2(830, 240);
-                controlsButtons[1].GetComponentInChildren<Text>().text = "No Hay Tareas";
-                controlsButtons[1].interactable = false;
+                if (www.downloadHandler.text != "0" && !www.downloadHandler.text.Contains(":"))
+                {
+                    controlsButtons[1].GetComponent<RectTransform>().sizeDelta = new Vector2(430, 240);
+                    controlsButtons[1].GetComponentInChildren<Text>().text = "Tareas";
+                    controlsButtons[1].interactable = true;
+                    notification.SetActive(true);
+                    notification.GetComponentInChildren<Text>().text = www.downloadHandler.text;
+                }
+                else
+                {
+                    controlsButtons[1].GetComponent<RectTransform>().sizeDelta = new Vector2(830, 240);
+                    controlsButtons[1].GetComponentInChildren<Text>().text = "No Hay Tareas";
+                    controlsButtons[1].interactable = false;
+                }
             }
         }
         else
@@ -232,13 +234,13 @@ public class DataBaseAdmin : MonoBehaviour
             WWWForm form = new WWWForm();
             form.AddField("user", user);
 
-            #pragma warning disable CS0618
-            WWW www = new WWW("http://" + server + "/tasker/getTask.php", form);
-            yield return www;
-
-            tasks.ImportData(www.text);
-
-            StartCoroutine(OpenTasksMenu());
+            using (UnityWebRequest www = UnityWebRequest.Post("http://" + server + "/tasker/getTask.php", form))
+            {
+                yield return www.SendWebRequest();
+                print("ms: " + www.timeout);
+                tasks.ImportData(www.downloadHandler.text);
+                StartCoroutine(OpenTasksMenu(www));
+            }
         }
     }
 
@@ -330,7 +332,7 @@ public class DataBaseAdmin : MonoBehaviour
         }
     }
 
-    IEnumerator OpenTasksMenu()
+    IEnumerator OpenTasksMenu(UnityWebRequest www)
     {
         if (!animating)
         {
